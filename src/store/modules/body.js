@@ -10,7 +10,6 @@ export default {
                 .then(res => commit('updateItems', res.data))
                 .catch(err => {
                     if (err.message === "Request failed with status code 401"){
-                        console.log("in if")
                         router.push('/login')
                     } else {
                         console.log(err);
@@ -67,7 +66,6 @@ export default {
         mutations: {
             updateSelectedAlbum(state, selectedAlbum) {
                 state.selectedAlbum = selectedAlbum
-                console.log('+1 ' + state.componentKey + " - " + state.selectedAlbum)
             },
             updateItems(state, items) {
                 state.items = items
