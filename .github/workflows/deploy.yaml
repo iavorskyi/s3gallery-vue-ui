@@ -84,5 +84,5 @@ jobs:
         with:
           namespace: ${{ env.NAMESPACE }}
           manifests: |
-            s3_gallery_ui/deployment/deployment.yaml
+            deployment/deployment.yaml
           images: sunua/s3gallery_ui:${{ env.SHA }}-${{ env.TAG }}
