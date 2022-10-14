@@ -5,7 +5,7 @@ export default {
     actions: {
         login({commit, state}){
             const body = {email: state.email, password: state.password}
-            axios.post('http://s3gallery-svc/sign-in', body)
+            axios.post('http://s3gallery/sign-in', body)
                 .then((res)=> {
                     commit('updateToken', res.data.token);
                     commit('updateUser', res.data.user)})
