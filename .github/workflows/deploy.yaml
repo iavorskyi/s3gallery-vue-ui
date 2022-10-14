@@ -1,0 +1,88 @@
+name: Build and Publish
+
+on:
+  # run it on push to the default repository branch
+  push:
+    branches: [main]
+  # run it during pull request
+  pull_request:
+
+env:
+  TAG: ${{ github.event_name == 'pull_request' && 'dev' || 'prod' }}
+  NAMESPACE: ${{ github.event_name == 'pull_request' && 'dev' || 'default' }}
+jobs:
+  # define job to build and publish docker image
+  build-and-push-docker-image:
+    name: Build Docker image and push to repositories
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-latest
+
+    # steps to perform in job
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create short SHA
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+        with:
+          length: 7
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+      - run: echo ${{ github.event_name }}
+
+      # setup Docker build action
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build image and push to Docker Hub and GitHub Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: .
+          # Note: tags has to be all lower-case
+          tags: |
+            sunua/s3gallery_ui:${{ env.SHA }}-${{ env.TAG }}
+          # build on feature branches, push only on main branch
+          push: ${{ true }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy_on_cluster:
+    name: Deploy on k8s cluster
+    runs-on: ubuntu-latest
+    needs: build-and-push-docker-image
+
+    steps:
+      - uses: azure/k8s-set-context@v1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }} # Use secret (https://developer.github.com/actions/managing-workflows/storing-secrets/)
+        #          context: <context name>  #If left unspecified, current-context from kubeconfig is used as default
+        id: setcontext
+      - name: Create short SHA
+        uses: benjlevesque/short-sha@v1.2
+        id: short-sha
+        with:
+          length: 7
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+      - run: echo ${{ github.event_name }}
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - uses: Azure/k8s-deploy@v3.1
+        with:
+          namespace: ${{ env.NAMESPACE }}
+          manifests: |
+            s3_gallery_ui/deployment/deployment.yaml
+          images: sunua/s3gallery_ui:${{ env.SHA }}-${{ env.TAG }}
