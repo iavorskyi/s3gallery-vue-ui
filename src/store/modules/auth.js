@@ -5,7 +5,7 @@ export default {
     actions: {
         login({commit, state}){
             const body = {email: state.email, password: state.password}
-            axios.post('http://localhost:8000/sign-in', body)
+            axios.post('/sign-in', body)
                 .then((res)=> {
                     commit('updateToken', res.data.token);
                     commit('updateUser', res.data.user)})
