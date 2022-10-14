@@ -18,7 +18,7 @@ spec:
         - name: s3gallery-ui
           image: sunua/s3gallery_ui:v3.2
           ports:
-            - containerPort: 3000
+            - containerPort: 80
 
 
 
@@ -33,7 +33,7 @@ spec:
   type: LoadBalancer
   ports:
     - protocol: TCP
-      port: 3000
-      targetPort: 3000
+      port: 80
+      targetPort: 80
   selector:
     app: s3gallery-ui
