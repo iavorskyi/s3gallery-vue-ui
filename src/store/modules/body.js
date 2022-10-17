@@ -4,13 +4,12 @@ import router from "@/router";
 export default {
     actions: {
         getItems({commit, rootState}) {
-            axios.get('http://localhost:8000/api/albums/'+rootState.body.selectedAlbum+'/items/', {
+            axios.get('/api/albums/'+rootState.body.selectedAlbum+'/items/', {
                 headers: {Authorization: 'Bearer ' + rootState.auth.token}
             })
                 .then(res => commit('updateItems', res.data))
                 .catch(err => {
                     if (err.message === "Request failed with status code 401"){
-                        console.log("in if")
                         router.push('/login')
                     } else {
                         console.log(err);
@@ -19,7 +18,7 @@ export default {
                 .finally(() => commit('updatePaths', rootState.body.items.map(item => generatePath(item.album, item.name, rootState.body))))
         },
         fetchAlbums({commit, rootState}) {
-            axios.get("http://localhost:8000/api/albums", {
+            axios.get("/api/albums", {
                 headers: {Authorization: 'Bearer ' + rootState.auth.token}
             })
                 .then(res => commit('updateAlbums', res.data))
@@ -35,7 +34,7 @@ export default {
         upload({rootState,  dispatch, state, commit}){
             const formData = new FormData();
             formData.append('image', state.itemToUpload)
-            axios.post("http://localhost:8000/api/albums/demo/items/", formData, {
+            axios.post("/api/albums/demo/items/", formData, {
                 headers: { Authorization: 'Bearer ' + rootState.auth.token}
             })
                 .then(() => dispatch('getItems'))
@@ -49,7 +48,7 @@ export default {
                 })
         },
         deleteItem({rootState, dispatch, commit}){
-            const path = "http://localhost:8000/api/albums/demo/items/"+rootState.body.itemIdToDelete
+            const path = "/api/albums/demo/items/"+rootState.body.itemIdToDelete
             axios.delete(path, {
                 headers: { Authorization: 'Bearer ' + rootState.auth.token}
             })
@@ -67,7 +66,6 @@ export default {
         mutations: {
             updateSelectedAlbum(state, selectedAlbum) {
                 state.selectedAlbum = selectedAlbum
-                console.log('+1 ' + state.componentKey + " - " + state.selectedAlbum)
             },
             updateItems(state, items) {
                 state.items = items

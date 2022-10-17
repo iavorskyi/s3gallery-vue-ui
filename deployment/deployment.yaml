@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: s3gallery-ui
+  labels:
+    app: s3gallery-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: s3gallery-ui
+  template:
+    metadata:
+      labels:
+        app: s3gallery-ui
+    spec:
+      containers:
+        - name: s3gallery-ui
+          image: sunua/s3gallery_ui:v3.2
+          ports:
+            - containerPort: 80
+
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: s3gallery-ui
+  name: s3gallery-ui
+spec:
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: s3gallery-ui
