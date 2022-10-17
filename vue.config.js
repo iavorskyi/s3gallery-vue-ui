@@ -4,7 +4,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '^/': {
-        target: 'http://s3gallery:8000',
+        target: 'https://www.google.com',
         changeOrigin: true
       },
     }
