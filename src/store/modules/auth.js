@@ -14,7 +14,7 @@ export default {
                 })
                 .catch(err => console.log(err))
         },
-        test({state}) {
+        test() {
             axios.post('/search?q=javascript')
                 .then(resp => {
                     console.log(resp);
