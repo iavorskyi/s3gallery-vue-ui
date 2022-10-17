@@ -3,8 +3,8 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     proxy: {
-      '^/': {
-        target: 'https://www.google.com',
+      '': {
+        target: 'http://s3gallery:8000',
         changeOrigin: true
       },
     }
