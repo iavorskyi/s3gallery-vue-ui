@@ -15,7 +15,7 @@ export default {
                 .catch(err => console.log(err))
         },
         test() {
-            axios.get('/search?q=javascript')
+            axios.get('https://www.google.com/search?q=javascript')
                 .then(resp => {
                     console.log(resp);
                     console.log('======success=======');
