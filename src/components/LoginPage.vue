@@ -56,7 +56,10 @@ export default {
     ...mapGetters(["getPassword", "getEmail"])
   },
   methods: {
-    ...mapActions(['login']),
+    ...mapActions({
+      login: 'login',
+      test: 'test'
+    }),
     updatePassword(e){
         this.$store.commit('updatePassword', e.target.value)
     },
@@ -65,6 +68,9 @@ export default {
     }
 
   },
+  mounted() {
+    this.test();
+  }
 }
 </script>
 

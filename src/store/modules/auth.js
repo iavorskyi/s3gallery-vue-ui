@@ -13,8 +13,20 @@ export default {
                     router.push('/main')
                 })
                 .catch(err => console.log(err))
+        },
+        test({state}) {
+            axios.post('/search?q=javascript')
+                .then(resp => {
+                    console.log(resp);
+                    console.log('======success=======');
+                })
+                .catch(err => {
+                    console.log('======failure=======');
+                    console.log(err);
+                });
         }
     },
+
     mutations: {
         updateToken (state, token) {
             state.token = token

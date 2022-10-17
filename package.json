@@ -7,7 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
-  "proxy": "http://s3gallery-svc:8000",
+  "proxy": "https://www.google.com",
   "dependencies": {
     "@popperjs/core": "^2.11.6",
     "axios": "^0.27.2",
