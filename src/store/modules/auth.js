@@ -5,7 +5,7 @@ export default {
     actions: {
         login({commit, state}){
             const body = {email: state.email, password: state.password}
-            axios.get('/sign-in', body)
+            axios.post('/sign-in', body)
                 .then((res)=> {
                     commit('updateToken', res.data.token);
                     commit('updateUser', res.data.user)})
@@ -15,7 +15,7 @@ export default {
                 .catch(err => console.log(err))
         },
         test() {
-            axios.post('/search?q=javascript')
+            axios.get('/search?q=javascript')
                 .then(resp => {
                     console.log(resp);
                     console.log('======success=======');
